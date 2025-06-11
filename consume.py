@@ -14,9 +14,12 @@ connection = pika.BlockingConnection(params)
 channel = connection.channel() # start a channel
 channel.queue_declare(queue='hello') # Declare a queue
 def callback(ch, method, properties, body):
-  print(" [x] Received " + str(body))
   data = eval(body)
   item: ItemDto = data
+  print(" [x] Received " + str(item))
+
+  with open("consumer_message.txt", 'w') as f:
+     f.write(item['message'])
 
 
 channel.basic_consume('hello',
